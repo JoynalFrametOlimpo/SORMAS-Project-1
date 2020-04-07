@@ -64,7 +64,6 @@ import de.symeda.sormas.backend.common.AbstractAdoService;
 import de.symeda.sormas.backend.common.AbstractCoreAdoService;
 import de.symeda.sormas.backend.common.CoreAdo;
 import de.symeda.sormas.backend.disease.DiseaseConfigurationFacadeEjb.DiseaseConfigurationFacadeEjbLocal;
-import de.symeda.sormas.backend.facility.Facility;
 import de.symeda.sormas.backend.location.Location;
 import de.symeda.sormas.backend.person.Person;
 import de.symeda.sormas.backend.person.PersonFacadeEjb.PersonFacadeEjbLocal;
@@ -775,10 +774,6 @@ public class ContactService extends AbstractCoreAdoService<Contact> {
 							cb.equal(caze.join(Case.DISTRICT, JoinType.LEFT).get(District.UUID), contactCriteria.getDistrict().getUuid())
 					)));
 		}
-		if (contactCriteria.getCaseFacility() != null) {
-			filter = and(cb, filter, cb.equal(caze.join(Case.HEALTH_FACILITY, JoinType.LEFT).get(Facility.UUID),
-					contactCriteria.getCaseFacility().getUuid()));
-		}
 		if (contactCriteria.getContactOfficer() != null) {
 			filter = and(cb, filter, cb.equal(from.join(Contact.CONTACT_OFFICER, JoinType.LEFT).get(User.UUID),
 					contactCriteria.getContactOfficer().getUuid()));
@@ -850,6 +845,10 @@ public class ContactService extends AbstractCoreAdoService<Contact> {
 		if (contactCriteria.getContactCategory() != null) {
 			filter = and(cb, filter,
 					cb.equal(from.get(Contact.CONTACT_CATEGORY), contactCriteria.getContactCategory()));
+		}
+		if (contactCriteria.getCaseClassification() != null) {
+			filter = and(cb, filter,
+					cb.equal(caze.get(Case.CASE_CLASSIFICATION), contactCriteria.getCaseClassification()));
 		}
 
 		return filter;
